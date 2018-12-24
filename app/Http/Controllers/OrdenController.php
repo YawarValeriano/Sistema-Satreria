@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Input;
 use SastRicAtelier\Http\Requests\OrdenFormRequest;
 use SastRicAtelier\Cliente;
 use SastRicAtelier\Orden;
+use Illuminate\Support\Facades\Auth;
 use DB;
 
-uuse Carbon\Carbon;
+use Carbon\Carbon;
 use Response;
 use Illuminate\Support\Collection;
 
@@ -28,53 +29,35 @@ class OrdenController extends Controller
 			$query=trim($request->get('searchText'));
 			$ordenes=DB::table('orden_trabajo as i')
 				->join('cliente as p','i.cliente_ci','=','p.CI')
-				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos)'),'i.precioUnitario','p.saldo','i.fecha_inicio','i.fecha_entrega','i.flag_tipo','i.flag_estado','i.observaciones')
+				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.cantidad*i.precioUnitario as total'),'i.saldo','i.fecha_inicio','i.fecha_entrega','i.flag_tipo','i.flag_estado','i.observaciones')
 				->where('p.nombre','LIKE','%'.$query.'%')
 				->orwhere('p.apellidos','LIKE','%'.$query.'%')
 				->orwhere('p.CI','LIKE','%'.$query.'%')
-				->groupBy('i.id_orden_trabajo','i.precioUnitario','p.saldo','i.fecha_inicio','i.fecha_entrega','i.flag_tipo','i.flag_estado','i.observaciones')
+				->groupBy('i.id_orden_trabajo','p.nombre','p.apellidos','i.cantidad','i.precioUnitario','i.saldo','i.fecha_inicio','i.fecha_entrega','i.flag_tipo','i.flag_estado','i.observaciones')
 				->paginate(7);
-			return view('clientes.index',["ordenes"=>$ordenes,"searchText"=>$query]);
+			return view('ordenes.index',["ordenes"=>$ordenes,"searchText"=>$query]);
 		}
 	}
 	public function create()
 	{
 		$clientes=DB::table('cliente')->get();
-		return view("compras.ingreso.create",["clientes"=>$clientes]);
+		return view("ordenes.create",["clientes"=>$clientes]);
 	}
-	public function store (IngresoFormRequest $request)
+	public function store (OrdenFormRequest $request)
 	{
-		try {
-			DB::beginTransaction();
-			$ingreso=new Ingreso();
-			$ingreso->id_proveedor=$request->get('id_proveedor');
-			$ingreso->num_comprobante=$request->get('num_comprobante');
-			$time = Carbon::now('America/La_Paz');
-			$ingreso->fecha_hora=$time->toDateTimeString();
-			$ingreso->estado='A';
-			$ingreso->tipo_actividad='Compra';
-			$ingreso->save();
-
-			$id_articulo=$request->get('id_articulo');
-			$cantidad=$request->get('cantidad');
-			$p_compra=$request->get('precio_compra');
-			$p_venta=$request->get('precio_venta');
-
-			$cont=0;
-			while ($cont < count($id_articulo)) {
-				$detalle= new Ing_Arti;
-				$detalle->id_ingreso=$ingreso->id_ingreso;
-				$detalle->id_articulo=$id_articulo[$cont];
-				$detalle->cantidad=$cantidad[$cont];
-				$detalle->precio_compra=$p_compra[$cont];
-				$detalle->precio_venta=$p_venta[$cont];
-				$detalle->save();
-				$cont=$cont+1;
-			}
-			DB::commit();
-		} catch (Exception $e) {
-			DB::rollback();
-		}
+		$orden=new Orden;
+		$orden->id_orden_trabajo=$request->get('id_orden_trabajo');
+		$orden->sastre_id=Auth::id();
+		$orden->cliente_ci=$request->get('cliente_ci');
+		$orden->cantidad=$request->get('cantidad');
+		$orden->precioUnitario=$request->get('precioUnitario');
+		$orden->saldo=$request->get('saldo');
+		$orden->fecha_inicio= Carbon::now()->toTimeString();
+		$orden->fecha_entrega=$request->get('fecha_entrega');
+		$orden->flag_tipo=$request->get('flag_tipo');
+		$orden->flag_estado=0;
+		$orden->observaciones=$request->get('observaciones');
+		$orden->save();
 		return Redirect::to('compras/ingreso');
 	}
 	public function show($id)
@@ -95,11 +78,5 @@ class OrdenController extends Controller
 
         return view("compras.ingreso.show",["ingreso"=>$ingreso,"detalles"=>$detalles]); 
     }
-   	public function destroy($id)
-    {
-        $ingreso=Ingreso::findOrFail($id);
-        $ingreso->estado='C';
-        $ingreso->update();
-        return Redirect::to('compras/ingreso');
-    }
+   
 }
