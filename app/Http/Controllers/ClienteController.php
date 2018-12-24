@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use SastRicAtelier\Cliente;
 use Illuminate\Support\Facades\Redirect;
-use SastRicAtelier\Http\Request\ClienteFormRequest;
+use SastRicAtelier\Http\Requests\ClienteFormRequest;
 use DB;
 
 class ClienteController extends Controller
@@ -24,6 +24,7 @@ class ClienteController extends Controller
 				->select('a.CI','a.nombre','a.apellidos','a.telefono','a.zona')
 				->where('a.nombre','LIKE','%'.$query.'%')
                 ->orwhere('a.telefono','LIKE','%'.$query.'%')
+                ->orwhere('a.CI','LIKE','%'.$query.'%')
 				->orderBy('a.CI','asc')
 				->paginate(7);
 			return view("clientes.index",["cliente"=>$cliente,"searchText"=>$query]);
@@ -58,12 +59,12 @@ class ClienteController extends Controller
         $cliente->telefono=$request->get('telefono');
         $cliente->zona=$request->get('zona');
         $cliente->update();
-        return Redirect::to('clientes');
+        return Redirect::to('cliente');
     }
     public function destroy($id)
     {
-        $cliente=Articulo::findOrFail($id);
+        $cliente=Cliente::findOrFail($id);
         $cliente->delete();
-        return Redirect::to('clientes');
+        return Redirect::to('cliente');
     }
 }

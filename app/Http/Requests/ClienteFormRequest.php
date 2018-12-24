@@ -24,9 +24,6 @@ class ClienteFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'CI'=>'required|integer|max:11',
-            'nombre'=>'required|max:45',
-            'apellidos'=>'required|max:45',
             'telefono'=>'required|max:10',
             'zona'=>'required|max:45',
         ];
