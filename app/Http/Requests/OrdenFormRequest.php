@@ -24,11 +24,10 @@ class OrdenFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'fecha_entrega'=>'required|date',
             'cantidad'=>'required|integer',
-            'precioUnitario'=>'required|min:10',
-            'saldo'=>'required',
-            'fecha_inicio'=>'required',
-            'fecha_entrega'=>'required',
+            'detalle'=>'required',
+            'precioUnitario'=>'required',
         ];
     }
 }

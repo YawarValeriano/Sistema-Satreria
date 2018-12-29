@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Ricardo's Atelier</title>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Tell the browser to be responsive to screen width -->
@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css') }}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{ asset('bower_components/Ionicons/css/ionicons.min.css') }}">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{{ asset('plugins/iCheck/all.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('css/AdminLTE.min.css') }}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -35,7 +37,7 @@
 
         <header class="main-header">
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <a href="#" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>R</b>At</span>
                 <!-- logo for regular state and mobile devices -->
@@ -56,16 +58,13 @@
                                     {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
+                                <li class="user-footer">
+                                    <div align="center">
+                                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar Sesión</a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                {{ csrf_field() }}
+                                            </form>  
+                                    </div>
                                 </li>
                             </ul>
                         </li>
@@ -89,8 +88,8 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Tareas</li>
-                        <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Nuevo Pedido</span></a></li>
-                        <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Clientes</span></a></li>
+                        <li><a href="{{url('orden')}}"><i class="fa fa-circle-o text-red"></i> <span>Listado de trabajos</span></a></li>
+                        <li><a href="{{url('cliente')}}"><i class="fa fa-circle-o text-yellow"></i> <span>Clientes</span></a></li>
                         <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Ayuda</span></a></li>
                 </ul>
             </section>
@@ -100,18 +99,18 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <section class="content-header">
+            <section class="content">
                 @yield('contenido')
             </section>
         </div>
         <!-- /.content-wrapper -->
+
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
                 <b>Versión</b> 1.2.0
             </div>
             <strong>Copyright &copy; 2018.</strong> Todos los Derechos Reservados.
         </footer>
-
     </div>
 
 
@@ -122,6 +121,23 @@
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
     $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <!-- iCheck 1.0.1 -->
+    <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
+    <script>
+        var date = new Date();
+        date.setDate(date.getDate());
+        $(function () {
+              $('#datepicker').datepicker({
+                    autoclose: true,
+                    startDate: new Date()
+              })
+              //Flat red color scheme for iCheck
+              $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass   : 'iradio_flat-green'
+              })
+        })
     </script>
     <!-- Bootstrap 3.3.7 -->
     <script src="{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
