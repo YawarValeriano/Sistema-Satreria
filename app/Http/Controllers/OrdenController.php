@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use SastRicAtelier\Http\Requests\OrdenFormRequest;
+use SastRicAtelier\Http\Requests\ClienteFormRequest;
 use SastRicAtelier\Cliente;
 use SastRicAtelier\Orden;
 use Illuminate\Support\Facades\Auth;
@@ -24,59 +25,51 @@ class OrdenController extends Controller
 	}
 	public function index(Request $request)
 	{
+		//DB::raw('i.cantidad*i.precioUnitario as total')
 		if($request)
 		{
 			$query=trim($request->get('searchText'));
 			$ordenes=DB::table('orden_trabajo as i')
 				->join('cliente as p','i.cliente_ci','=','p.CI')
-				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.cantidad*i.precioUnitario as total'),'i.saldo','i.fecha_inicio','i.fecha_entrega','i.flag_tipo','i.flag_estado','i.observaciones')
+				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.precioUnitario as total'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%m-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%m-%Y") as fecha_entrega'),'i.flag_tipo','i.flag_estado','i.detalle')
 				->where('p.nombre','LIKE','%'.$query.'%')
 				->orwhere('p.apellidos','LIKE','%'.$query.'%')
 				->orwhere('p.CI','LIKE','%'.$query.'%')
-				->groupBy('i.id_orden_trabajo','p.nombre','p.apellidos','i.cantidad','i.precioUnitario','i.saldo','i.fecha_inicio','i.fecha_entrega','i.flag_tipo','i.flag_estado','i.observaciones')
+				->orderBy('i.id_orden_trabajo','DESC')
+				->groupBy('i.id_orden_trabajo','p.nombre','p.apellidos','i.cantidad','i.precioUnitario','i.cuenta','i.fecha_inicio','i.fecha_entrega','i.flag_tipo','i.flag_estado','i.detalle')
 				->paginate(7);
 			return view('ordenes.index',["ordenes"=>$ordenes,"searchText"=>$query]);
 		}
 	}
 	public function create()
 	{
-		$clientes=DB::table('cliente')->get();
-		return view("ordenes.create",["clientes"=>$clientes]);
+		//findorfail y buscar como obtener el fail
+		return view("ordenes.create");
 	}
 	public function store (OrdenFormRequest $request)
 	{
+		$hoy=Carbon::today();
+		$aux=count(DB::table('orden_trabajo')->select('sastre_id')->where(DB::raw('MONTH(fecha_inicio)'),'LIKE',$hoy->month)->get());
+		$num=self::nro_orden($aux+1);
 		$orden=new Orden;
-		$orden->id_orden_trabajo=$request->get('id_orden_trabajo');
+		$orden->id_orden_trabajo=$hoy->year."-".$hoy->month."-".$num;
 		$orden->sastre_id=Auth::id();
-		$orden->cliente_ci=$request->get('cliente_ci');
+		$orden->cliente_ci=$request->get('CI');
 		$orden->cantidad=$request->get('cantidad');
 		$orden->precioUnitario=$request->get('precioUnitario');
-		$orden->saldo=$request->get('saldo');
-		$orden->fecha_inicio= Carbon::now()->toTimeString();
-		$orden->fecha_entrega=$request->get('fecha_entrega');
+		$orden->cuenta=$request->get('cuenta');
+		$orden->fecha_inicio= $hoy;
+		$formato_fecha=new Carbon($request->get('fecha_entrega'));
+		$orden->fecha_entrega=$formato_fecha->format('Y-m-d');
 		$orden->flag_tipo=$request->get('flag_tipo');
 		$orden->flag_estado=0;
-		$orden->observaciones=$request->get('observaciones');
+		$orden->detalle=$request->get('detalle');
 		$orden->save();
-		return Redirect::to('compras/ingreso');
+		return Redirect::to('orden');
 	}
-	public function show($id)
-    {
-    	$ingreso=DB::table('ingreso as i')
-			->join('persona as p','i.id_proveedor','=','p.id_persona')
-			->join('ing_arti as ia','i.id_ingreso','=','ia.id_ingreso')
-			->select('i.id_ingreso','i.fecha_hora','p.nombre','i.tipo_actividad','i.num_comprobante','i.estado',DB::raw('sum(ia.cantidad*ia.precio_compra) as total'))
-			->where('i.id_ingreso','=',$id)
-			->groupBy('i.id_ingreso','i.fecha_hora','p.nombre','i.tipo_actividad','i.num_comprobante','i.estado')
-			->first();
+	public function nro_orden($numero){
+		return str_pad($numero, 4,'0', STR_PAD_LEFT);
+	}
 
-		$detalles=DB::table('ing_arti as ia')
-			->join('articulo as a','ia.id_articulo','=','a.id_articulo')
-			->select('a.nombre as articulo','ia.cantidad','ia.precio_compra','ia.precio_venta')
-			->where('ia.id_ingreso','=',$id)
-			->get();
-
-        return view("compras.ingreso.show",["ingreso"=>$ingreso,"detalles"=>$detalles]); 
-    }
    
 }

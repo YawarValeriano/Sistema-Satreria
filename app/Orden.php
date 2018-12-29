@@ -17,12 +17,12 @@ class Orden extends Model
     	'cliente_ci',
     	'cantidad',
     	'precioUnitario',
-    	'saldo',
+    	'cuenta',
     	'fecha_inicio',
     	'fecha_entrega',
     	'flag_tipo',
     	'flag_estado',
-    	'observaciones'
+    	'detalle'
     ];
 
     protected $guarded =[

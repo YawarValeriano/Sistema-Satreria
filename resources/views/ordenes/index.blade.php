@@ -5,7 +5,7 @@
 			<div class="box-header with-border">
 				<div class="row">
 			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			          	<h3 class="box-title">Listado de Ordenes</h3>
+			          	<h3 class="box-title">Listado de Ordenes <a href="orden/create"><button class="btn btn-success">Nuevo</button></a></h3>
 			        </div>
 			    </div>
 			</div>
@@ -24,7 +24,7 @@
 			          				<th>Cliente</th>
 			          				<th>Cantidad</th>
 			          				<th>Precio Acordado</th>
-			          				<th>Saldo </th>
+			          				<th>A Cuenta </th>
 			          				<th>Total</th>
 			          				<th>Fecha de Inicio</th>
 			          				<th>Fecha de entrega</th>
@@ -39,7 +39,7 @@
 			          					<td>{{$or->cliente}}</td>
 			          					<td>{{$or->cantidad}}</td>
 			          					<td>{{$or->precioUnitario}}</td>
-			          					<td>{{$or->saldo}}</td>
+			          					<td>{{$or->cuenta}}</td>
 			          					<td>{{$or->total}}</td>
 			          					<td>{{$or->fecha_inicio}}</td>
 			          					<td>{{$or->fecha_entrega}}</td>
@@ -63,10 +63,10 @@
 			          							<td>Entregado</td>
 			          							@break
 			          					@endswitch
-			          					<td>{{$or->observaciones}}</td>
+			          					<td>{{$or->detalle}}</td>
 			          					<td>
-			          						<a href="{{URL::action('ClienteController@edit', $or->id_orden_trabajo)}}"><button class="btn btn-info">Editar</button></a>
-                         					<a href="" data-target="#modal-delete-{{$or->id_orden_trabajo}}" data-toggle="modal"><button class="btn btn-danger">Eliminar</button></a>
+			          						<a href="{{URL::action('OrdenController@edit', $or->id_orden_trabajo)}}"><button class="btn btn-info">Ver detalle</button></a>
+                         					<a href="" data-target="#modal-delete-{{$or->id_orden_trabajo}}" data-toggle="modal"><button class="btn btn-success btn-sm">Cambiar Estado</button></a>
 			          					</td>
 			          				</tr>
 			          				
@@ -81,4 +81,4 @@
 			</div>
 		</div>		
 	</div>
-@stop
+@endsection
