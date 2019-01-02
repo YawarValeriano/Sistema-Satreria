@@ -88,7 +88,8 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Tareas</li>
-                        <li><a href="{{url('orden')}}"><i class="fa fa-circle-o text-red"></i> <span>Listado de trabajos</span></a></li>
+                        <li><a href="{{url('orden')}}"><i class="fa fa-circle-o text-red"></i> <span>Ordenes</span></a></li>
+                        <li><a href="{{url('pendiente')}}"><i class="fa fa-circle-o text-blue"></i> <span>Pendientes</span></a></li>
                         <li><a href="{{url('cliente')}}"><i class="fa fa-circle-o text-yellow"></i> <span>Clientes</span></a></li>
                         <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Ayuda</span></a></li>
                 </ul>
@@ -123,6 +124,40 @@
     $.widget.bridge('uibutton', $.ui.button);
     </script>
     <!-- iCheck 1.0.1 -->
+    <script>
+        $('#modal-pendiente').on('show.bs.modal',function(event){
+            var button = $(event.relatedTarget);
+            var id = button.data('id_orden_trabajo');
+            var estado = button.data('flag_estado');
+            var modal = $(this);
+
+            modal.find('.modal-body #cabecera').text('Actualización de estado para pedido '+id);
+            modal.find('.modal-body #id_orden_trabajo').val(id);
+        })
+    </script>
+    <script>
+        $('#modal-orden').on('show.bs.modal',function(event){
+            var button = $(event.relatedTarget);
+            var id = button.data('id_orden_trabajo');
+            var estado = button.data('flag_estado');
+            var modal = $(this);
+            if(!estado)
+                estado=0;
+            var elemento=document.getElementById("proceso");
+            switch(estado){
+                case 2:
+                    elemento.disabled = true;
+                    document.getElementById("finalizado").checked = true;
+                    break;
+                default:
+                    elemento.checked = true;
+                    break;
+            }      
+            modal.find('.modal-body #cabecera').text('Actualización de estado para pedido '+id);
+            modal.find('.modal-body #id_orden_trabajo').val(id);
+            modal.find('.modal-body #estado').val(estado);
+        })
+    </script>
     <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
     <script>
         var date = new Date();

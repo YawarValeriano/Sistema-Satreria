@@ -21,3 +21,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('cliente','ClienteController');
 Route::resource('orden','OrdenController');
+Route::resource('pendiente','PendienteController');

@@ -5,7 +5,7 @@
 			<div class="box-header with-border">
 				<div class="row">
 			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			          	<h3 class="box-title">Listado de Ordenes <a href="orden/create"><button class="btn btn-success">Nuevo</button></a></h3>
+			          	<h3 class="box-title">Listado de Órdenes <a href="orden/create"><button class="btn btn-success">Nuevo</button></a></h3>
 			        </div>
 			    </div>
 			</div>
@@ -26,11 +26,12 @@
 			          				<th>Precio Acordado</th>
 			          				<th>A Cuenta </th>
 			          				<th>Total</th>
+			          				<th>Saldo</th>
 			          				<th>Fecha de Inicio</th>
 			          				<th>Fecha de entrega</th>
 			          				<th>Tipo</th>
 			          				<th>Estado</th>
-			          				<th>Observaciones</th>
+			          				<th>Detalle</th>
 			          				<th>Opciones</th>
 			          			</thead>
 			          			@foreach($ordenes as $or)
@@ -41,6 +42,7 @@
 			          					<td>{{$or->precioUnitario}}</td>
 			          					<td>{{$or->cuenta}}</td>
 			          					<td>{{$or->total}}</td>
+			          					<td>{{$or->saldo}}</td>
 			          					<td>{{$or->fecha_inicio}}</td>
 			          					<td>{{$or->fecha_entrega}}</td>
 			          					@if ( $or->flag_tipo === 0 )
@@ -66,10 +68,15 @@
 			          					<td>{{$or->detalle}}</td>
 			          					<td>
 			          						<a href="{{URL::action('OrdenController@edit', $or->id_orden_trabajo)}}"><button class="btn btn-info">Ver detalle</button></a>
-                         					<a href="" data-target="#modal-delete-{{$or->id_orden_trabajo}}" data-toggle="modal"><button class="btn btn-success btn-sm">Cambiar Estado</button></a>
+                         					@if( $or->flag_estado == 3)
+                         						<a href=""><button class="btn btn-success btn-sm" disabled>Cambiar Estado</button></a>
+                         					@else
+                         						<a href="" data-target="#modal-orden" data-id_orden_trabajo="{{$or->id_orden_trabajo}}" data-flag_estado="{{$or->flag_estado}}" data-toggle="modal"><button class="btn btn-success btn-sm">Cambiar Estado</button></a>
+                         					@endif
+
 			          					</td>
 			          				</tr>
-			          				
+			          				@include('ordenes.modal')
 			          			@endforeach
 			          		</table>
 			          	</div>

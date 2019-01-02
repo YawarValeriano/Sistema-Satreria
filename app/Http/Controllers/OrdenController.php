@@ -31,7 +31,7 @@ class OrdenController extends Controller
 			$query=trim($request->get('searchText'));
 			$ordenes=DB::table('orden_trabajo as i')
 				->join('cliente as p','i.cliente_ci','=','p.CI')
-				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.precioUnitario as total'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%m-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%m-%Y") as fecha_entrega'),'i.flag_tipo','i.flag_estado','i.detalle')
+				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.precioUnitario as total'),DB::raw('(i.precioUnitario - i.cuenta) as saldo'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%m-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%m-%Y") as fecha_entrega'),'i.flag_tipo','i.flag_estado','i.detalle')
 				->where('p.nombre','LIKE','%'.$query.'%')
 				->orwhere('p.apellidos','LIKE','%'.$query.'%')
 				->orwhere('p.CI','LIKE','%'.$query.'%')
@@ -70,6 +70,11 @@ class OrdenController extends Controller
 	public function nro_orden($numero){
 		return str_pad($numero, 4,'0', STR_PAD_LEFT);
 	}
-
+	public function update(Request $request){
+		$orden=Orden::findOrFail($request->id_orden_trabajo);
+        $orden->flag_estado=$request->flag_estado;
+        $orden->update();
+        return Redirect::to('orden');
+	}
    
 }
