@@ -65,7 +65,7 @@
                         <div class="row">
                               <div class="form-group" >
                                     <div class="col-lg-2 col-sm-2 col-md-2 col-xs-4" style="margin-top: 25px">
-                                          <label><input type="radio" name="flag_tipo" class="flat-red" required value=0 >Confección</label>
+                                          <label><input type="radio" name="flag_tipo" class="flat-red" required value=0>Confección</label>
                                     </div>
                                     <div class="col-lg-2 col-sm-2 col-md-2 col-xs-4" style="margin-top: 25px">
                                           <label><input type="radio" name="flag_tipo" class="flat-red" required value=1>Arreglo</label>
