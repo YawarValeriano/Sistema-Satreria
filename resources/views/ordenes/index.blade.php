@@ -22,13 +22,13 @@
 			          			<thead>
 			          				<th>ID Orden</th>
 			          				<th>Cliente</th>
-			          				<th>Cantidad</th>
-			          				<th>Precio Acordado</th>
-			          				<th>A Cuenta </th>
+			          				<th>Cant</th>
+			          				<th>Bs. Total</th>
+			          				<th>A/C </th>
 			          				<th>Total</th>
 			          				<th>Saldo</th>
-			          				<th>Fecha de Inicio</th>
-			          				<th>Fecha de entrega</th>
+			          				<th>Fecha Ini</th>
+			          				<th>Fecha Ent</th>
 			          				<th>Tipo</th>
 			          				<th>Estado</th>
 			          				<th>Detalle</th>
@@ -67,7 +67,8 @@
 			          					@endswitch
 			          					<td>{{$or->detalle}}</td>
 			          					<td>
-			          						<a href="{{URL::action('OrdenController@edit', $or->id_orden_trabajo)}}"><button class="btn btn-info">Ver detalle</button></a>
+			          						
+			          						<a href="{{URL::action('OrdenController@show', $or->id_orden_trabajo)}}" target="_blank" class="btn btn-info btn-sm glyphicon glyphicon-print"> Imprimir</a>
                          					@if( $or->flag_estado == 3)
                          						<a href=""><button class="btn btn-success btn-sm" disabled>Cambiar Estado</button></a>
                          					@else

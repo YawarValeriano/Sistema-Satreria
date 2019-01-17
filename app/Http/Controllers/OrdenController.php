@@ -11,6 +11,7 @@ use SastRicAtelier\Http\Requests\ClienteFormRequest;
 use SastRicAtelier\Cliente;
 use SastRicAtelier\Orden;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade as PDF;
 use DB;
 
 use Carbon\Carbon;
@@ -28,10 +29,11 @@ class OrdenController extends Controller
 		//DB::raw('i.cantidad*i.precioUnitario as total')
 		if($request)
 		{
+			DB::statement("SET lc_time_names = 'es_ES'");
 			$query=trim($request->get('searchText'));
 			$ordenes=DB::table('orden_trabajo as i')
 				->join('cliente as p','i.cliente_ci','=','p.CI')
-				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.precioUnitario as total'),DB::raw('(i.precioUnitario - i.cuenta) as saldo'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%m-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%m-%Y") as fecha_entrega'),'i.flag_tipo','i.flag_estado','i.detalle')
+				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.precioUnitario as total'),DB::raw('(i.precioUnitario - i.cuenta) as saldo'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%b-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%b-%Y") as fecha_entrega'),'i.flag_tipo','i.flag_estado','i.detalle')
 				->where('p.nombre','LIKE','%'.$query.'%')
 				->orwhere('p.apellidos','LIKE','%'.$query.'%')
 				->orwhere('p.CI','LIKE','%'.$query.'%')
@@ -43,8 +45,10 @@ class OrdenController extends Controller
 	}
 	public function create()
 	{
-		//findorfail y buscar como obtener el fail
-		return view("ordenes.create");
+				//->select(DB::raw('concat(CI, " ", nombre, " ", apellidos, " ", telefono) as valores'))
+		$clientes=DB::table('cliente')
+				->get();
+		return view('ordenes.create',["clientes"=>$clientes]);
 	}
 	public function store (OrdenFormRequest $request)
 	{
@@ -76,5 +80,33 @@ class OrdenController extends Controller
         $orden->update();
         return Redirect::to('orden');
 	}
+	// public function fetch(Request $request)
+ //    {
+ //     	if($request->get('query'))
+ //     	{
+	//       	$query = $request->get('query');
+	//       	$data = DB::table('cliente')
+	//         		->where('CI', 'LIKE', "%{$query}%")
+	//         		->get();
+ //      		$output = '<ul class="dropdown-menu" style="display:block; position:relative">';
+	//     	foreach($data as $row)
+	//       	{
+	//        		$output .= '<li><a href="#">'.$row->CI.'</a></li>';
+	//       	}
+ //      		$output .= '</ul>';
+ //      		echo $output;
+ //     	}
+ //    }
+   	public function show($id){
+   		DB::statement("SET lc_time_names = 'es_ES'");
+		$orden=DB::table('orden_trabajo as i')
+				->join('cliente as p','i.cliente_ci','=','p.CI')
+				->select('i.id_orden_trabajo','p.CI',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad',DB::raw('i.precioUnitario as total'),DB::raw('(i.precioUnitario - i.cuenta) as saldo'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%b-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%b-%Y") as fecha_entrega'),'i.detalle')
+				->where('i.id_orden_trabajo','LIKE',$id)->first();
+		$pdf = \PDF::loadView('ordenes.vista',array('orden'=>$orden));
+		$nombre='OT_'.$id.'.pdf';
+    	return $pdf->stream($nombre);
+	 }
+
    
 }

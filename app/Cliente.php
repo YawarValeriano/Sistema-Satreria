@@ -22,5 +22,9 @@ class Cliente extends Model
     protected $guarded =[
 
     ];
+    public function findByCI($q){
+        return $this->where('CI','LIKE',"%$q%")
+                    ->get();
+    }
 
 }
