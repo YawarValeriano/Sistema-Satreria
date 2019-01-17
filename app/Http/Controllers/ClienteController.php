@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use SastRicAtelier\Cliente;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\QueryException;
 use SastRicAtelier\Http\Requests\ClienteFormRequest;
 use DB;
 
@@ -36,14 +37,18 @@ class ClienteController extends Controller
     }
     public function store(ClienteFormRequest $request)
     {
-        $cliente=new Cliente;
-        $cliente->CI=$request->get('CI');
-        $cliente->nombre=$request->get('nombre');
-        $cliente->apellidos=$request->get('apellidos');
-        $cliente->telefono=$request->get('telefono');
-        $cliente->zona=$request->get('zona');
-        $cliente->save();
-        return Redirect::to('clientes');
+        try { 
+            $cliente=new Cliente;
+            $cliente->CI=$request->get('CI');
+            $cliente->nombre=$request->get('nombre');
+            $cliente->apellidos=$request->get('apellidos');
+            $cliente->telefono=$request->get('telefono');
+            $cliente->zona=$request->get('zona');
+            $cliente->save();
+            return Redirect::to('orden/create');
+        } catch(QueryException $ex){ 
+            return Redirect::to('orden/create')->with('alert', $ex);
+        }
     }
     public function show($id)
     {
@@ -51,8 +56,8 @@ class ClienteController extends Controller
     }
     public function edit($id)
     {
-    	return view('clientes.edit',['cliente'=>Cliente::findOrFail($id)]);
-	}
+        return view('clientes.edit',['cliente'=>Cliente::findOrFail($id)]);
+    }
     public function update(ClienteFormRequest $request,$id)
     {
         $cliente=Cliente::findOrFail($id);

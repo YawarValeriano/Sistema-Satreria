@@ -11,11 +11,13 @@
 
     <!-- Styles -->
     <!-- Bootstrap 3.3.7 -->
+    <link rel="shortcut icon" href="{{asset('images/icono.ico')}}">
     <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css') }}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{ asset('bower_components/Ionicons/css/ionicons.min.css') }}">
+    
     <!-- iCheck for checkboxes and radio inputs -->
     <link rel="stylesheet" href="{{ asset('plugins/iCheck/all.css') }}">
     <!-- Theme style -->
@@ -23,12 +25,12 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{ asset('css/skins/_all-skins.min.css') }}">
+    <!--select bootstrap-->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
     <!-- Date Picker -->
     <link rel="stylesheet" href="{{ asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{ asset('bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
-    <!-- bootstrap wysihtml5 - text editor -->
-    <link rel="stylesheet" href="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -88,10 +90,12 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Tareas</li>
-                        <li><a href="{{url('orden')}}"><i class="fa fa-circle-o text-red"></i> <span>Ordenes</span></a></li>
-                        <li><a href="{{url('pendiente')}}"><i class="fa fa-circle-o text-blue"></i> <span>Pendientes</span></a></li>
-                        <li><a href="{{url('cliente')}}"><i class="fa fa-circle-o text-yellow"></i> <span>Clientes</span></a></li>
-                        <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Ayuda</span></a></li>
+                        <li><a href="{{url('home')}}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                        <li><a href="{{url('orden')}}"><i class="fa fa-tasks"></i> <span>Ordenes</span></a></li>
+                        <li><a href="{{url('pendiente')}}"><i class="fa fa-list-alt"></i> <span>Pendientes</span></a></li>
+                        <li><a href="{{url('seguridad')}}"><i class="fa fa-user-plus"></i> <span>Sastres</span></a></li>
+                        <li><a href="{{url('cliente')}}"><i class="fa fa-users"></i> <span>Clientes</span></a></li>
+                        <li><a href="#"><i class="fa fa-info-circle"></i> <span>Ayuda</span></a></li>
                 </ul>
             </section>
             <!-- /.sidebar -->
@@ -115,10 +119,11 @@
     </div>
 
 
-    <!-- Scripts -->
+    <!-- Scripts 
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>-->
     <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
-    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>-->
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
     $.widget.bridge('uibutton', $.ui.button);
@@ -159,28 +164,18 @@
         })
     </script>
     <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
-    <script>
-        var date = new Date();
-        date.setDate(date.getDate());
-        $(function () {
-              $('#datepicker').datepicker({
-                    autoclose: true,
-                    startDate: new Date()
-              })
-              //Flat red color scheme for iCheck
-              $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                    checkboxClass: 'icheckbox_flat-green',
-                    radioClass   : 'iradio_flat-green'
-              })
-        })
-    </script>
     <!-- Bootstrap 3.3.7 -->
     <script src="{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <!-- datepicker -->
     <script src="{{ asset('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
     <!-- Bootstrap WYSIHTML5 -->
     <script src="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <!-- select bootstrap -->
+    <script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('js/adminlte.min.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>

@@ -2,34 +2,42 @@
 @section ('contenido')
 	<div class="row">
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-			<h3>Nuevo Pedido</h3>
-			@if (count($errors)>0)
-			<div class="alert alert-danger">
-				<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{$error}}</li>
-				@endforeach
-				</ul>
-			</div>
-			@endif
-		</div>
-	</div>
+			<h3>Nuevo Pedido
+                        <a href="{{route('cliente.create')}}">
+                              <button class="btn btn-success">Agregar Cliente</button>
+                        </a>
+                  </h3>
+                  @if (count($errors)>0)
+                  <div class="alert alert-danger">
+                        <ul>
+                        @foreach ($errors->all() as $error)
+                              <li>{{$error}}</li>
+                        @endforeach
+                        </ul>
+                  </div>
+                  @endif
+            </div>
+      </div>
             {!!Form::open(array('url'=>'orden','method'=>'POST', 'name'=>'cliente' ,'autocomplete'=>'off'))!!}
             {{Form::token()}}
       <div class="row">
             <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
+                  <div class="form-group">
                         <label for="CI">CI</label>
-                  <div class="input-group input-group-sm">
-                        <input type="number" required name="CI" class="form-control" value="{{old('CI')}}" autofocus >
-                        <span class="input-group-btn">
-                              <button class="btn btn-info btn-flat">Buscar</button>
-                        </span>
+                        <div >
+                              <select name="CI" class="form-control selectpicker" id="CI" data-live-search="true" onchange="alerta(this.value);" required>
+                                    <option disabled selected></option>
+                                    @foreach($clientes as $cl)
+                                          <option value="{{$cl->CI}}">{{$cl->CI}}</option>
+                                    @endforeach
+                              </select>
+                              
+                        </div>
+            <!--                    <input type="number" required name="carnet" id="carnet" class="form-control">
+                 <div id="lista_carnet"></div> -->
                   </div>
             </div>
       </div>
-            {!!Form::close()!!}
-            {!!Form::open(array('url'=>'orden','method'=>'POST',  'name'=>'datos' ,'autocomplete'=>'off'))!!}
-            {{Form::token()}}
       <div class="row">
             <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
                   <div class="form-group">
@@ -64,27 +72,15 @@
                   <div class="panel-body">
                         <div class="row">
                               <div class="form-group" >
-                                    <div class="col-lg-2 col-sm-2 col-md-2 col-xs-4" style="margin-top: 25px">
+                                    <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
                                           <label><input type="radio" name="flag_tipo" class="flat-red" required value=0>Confección</label>
                                     </div>
-                                    <div class="col-lg-2 col-sm-2 col-md-2 col-xs-4" style="margin-top: 25px">
+                                    <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
                                           <label><input type="radio" name="flag_tipo" class="flat-red" required value=1>Arreglo</label>
                                     </div>
                               </div>
-                              <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
-                                    <div class="form-group">
-                                          <label for="fecha_entrega">Fecha de entrega</label>
-                                          <div class="input-group date">
-                                                <div class="input-group-addon">
-                                                      <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input type="text" class="form-control pull-right" id="datepicker" name="fecha_entrega" required value="{{old('fecha_entrega')}}">
-                                          </div>
-                                          <!-- /.input group -->
-                                    </div>
-                              </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin-top: 10px">
                               <div class="col-lg-2 col-sm-12 col-md-12 col-xs-12">
                                     <div class="form-group">
                                           <label for="cantidad">Cantidad</label>
@@ -110,6 +106,20 @@
                                     </div>
                               </div>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
+                                    <div class="form-group">
+                                          <label for="fecha_entrega">Fecha de entrega</label>
+                                          <div class="input-group date">
+                                                <div class="input-group-addon">
+                                                      <i class="fa fa-calendar"></i>
+                                                </div>
+                                                <input type="text" class="form-control pull-right" id="datepicker" name="fecha_entrega" required value="{{old('fecha_entrega')}}">
+                                          </div>
+                                          <!-- /.input group -->
+                                    </div>
+                              </div>
+                        </div>
                   </div>
             </div>
             
@@ -117,10 +127,54 @@
       <div class="row">
             <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
                   <div class="form-group">
-                        <button class="btn btn-primary" type="submit">Guardar</button>
+                        <button class="btn btn-primary" type="submit" onclick="return validar();">Guardar</button>
                         <a href="{{ URL::previous() }}" class="btn btn-danger">Cancelar</a>
                   </div>
             </div>
       </div>
             {!!Form::close()!!}
+@endsection
+@section('scripts')
+<script>
+      var valores = {!! json_encode($clientes) !!};
+      function alerta(valor){
+            var cliente = valores.find(x => x.CI == valor);
+            var nombre=cliente.nombre;
+            var apellido=cliente.apellidos;
+            var dir=cliente.zona;
+            var telef=cliente.telefono;
+            document.getElementById("nombre").value = nombre;
+            document.getElementById("apellidos").value = apellido;
+            document.getElementById("zona").value = dir;
+            document.getElementById("telefono").value = telef;
+      }
+      function validar(){
+            var precio=document.getElementById('precioUnitario').value;
+            var cuenta=document.getElementById('cuenta').value;
+            precio=parseFloat(precio);
+            cuente=parseFloat(cuenta);
+            if (cuenta>precio) {
+                  alert("Campo 'A Cuenta' NO debe ser mayor a 'Precio Total'");
+                  document.getElementById('cuenta').value="";
+                  document.getElementById('cuenta').autofocus=true;
+                  return false;
+            }
+            return true;
+      }
+</script>
+<script>
+      var date = new Date();
+      date.setDate(date.getDate());
+      $(function () {
+            $('#datepicker').datepicker({
+                  autoclose: true,
+                  startDate: new Date()
+            })
+        //Flat red color scheme for iCheck
+            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                  checkboxClass: 'icheckbox_flat-green',
+                  radioClass   : 'iradio_flat-green'
+            })
+      })
+</script>
 @endsection
