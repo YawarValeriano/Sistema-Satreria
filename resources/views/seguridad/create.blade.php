@@ -91,6 +91,14 @@
                                                 </div>
                                           </div>
                                           <div class="form-group">
+                                                <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
+                                                      <label><input type="radio" name="type" class="flat-red" value=1>Administrador</label>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
+                                                      <label><input type="radio" name="type" class="flat-red" value=0>Sastre</label>
+                                                </div>
+                                          </div>
+                                          <div class="form-group">
                                                 <div class="col-md-6 col-md-offset-4">
                                                       <button type="submit" class="btn btn-primary">Registrar</button>
                                                     <a href="{{ URL::previous() }}" class="btn btn-danger">Cancelar</a>
@@ -109,6 +117,11 @@
       $(function () {
             $('#datepicker').datepicker({
                   autoclose: true,
+            })
+            //Flat red color scheme for iCheck
+            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                  checkboxClass: 'icheckbox_flat-green',
+                  radioClass   : 'iradio_flat-green'
             })
       })
 </script>

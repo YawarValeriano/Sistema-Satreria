@@ -36,14 +36,52 @@
                         @endif
                   </div>
                   <div class="form-group">
-                        <label for="password-confirm">Confirmar Contraseña</label>
-                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                      <label for="password-confirm">Confirmar Contraseña</label>
+                      <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                   </div>
-                  <div class="form-group">
-                  	<button class="btn btn-primary" type="submit">Guardar</button>
-                  	<a href="{{ URL::previous() }}" class="btn btn-danger">Cancelar</a>
+          @if($usuario->id != Auth::user()->id)
+
+          <div class="row">
+          @if($usuario->type==0)
+              <div class="form-group">
+                  <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
+                      <label><input type="radio" name="type" class="flat-red" value=1>Administrador</label>
                   </div>
+                  <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
+                      <label><input type="radio" name="type" class="flat-red" value=0 checked>Sastre</label>
+                  </div>
+              </div>
+          @else
+              <div class="form-group">
+                  <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
+                      <label><input type="radio" name="type" class="flat-red" value=1 checked>Administrador</label>
+                  </div>
+                  <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
+                      <label><input type="radio" name="type" class="flat-red" value=0>Sastre</label>
+                  </div>
+              </div>
+              @endif
+          </div>
+          @endif
+          <div class="form-group" style="margin-top: 10px">
+              <button class="btn btn-primary" type="submit">Guardar</button>
+              <a href="{{ URL::previous() }}" class="btn btn-danger">Cancelar</a>
+          </div>
+
+
 
 		{!!Form::close()!!}		
       </section>
+@endsection
+@section('scripts')
+    <script>
+        $(function () {
+
+            //Flat red color scheme for iCheck
+            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                checkboxClass: 'icheckbox_flat-green',
+                radioClass   : 'iradio_flat-green'
+            })
+        })
+    </script>
 @endsection

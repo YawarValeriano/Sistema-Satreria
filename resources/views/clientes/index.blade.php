@@ -5,7 +5,7 @@
 			<div class="box-header with-border">
 				<div class="row">
 			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			          	<h3 class="box-title">Listado de Clientes</h3>
+			          	<h3 class="box-title">Listado de Clientes <a href="{{url('cliente/create')}}"><button class="btn btn-success">Nuevo</button></a></h3>
 			        </div>
 			    </div>
 			</div>
@@ -25,6 +25,7 @@
 			          				<th>Apellidos</th>
 			          				<th>Teléfono</th>
 			          				<th>Zona</th>
+									<th>Correo Electrónico</th>
 			          				<th>Opciones</th>
 			          			</thead>
 			          			@foreach($cliente as $cl)
@@ -34,6 +35,7 @@
 			          					<td>{{$cl->apellidos}}</td>
 			          					<td>{{$cl->telefono}}</td>
 			          					<td>{{$cl->zona}}</td>
+										<td>{{$cl->email}}</td>
 			          					<td>
 			          						<a href="{{URL::action('ClienteController@edit', $cl->CI)}}"><button class="btn btn-info">Editar</button></a>
                          					<a href="" data-target="#modal-delete-{{$cl->CI}}" data-toggle="modal"><button class="btn btn-danger">Eliminar</button></a>

@@ -20,11 +20,18 @@ Route::get('/', function () {
         return view('welcome',['listado'=>$listado]);
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
-
+Route::group([
+    'middleware' => ['auth','isAdmin'],
+], function() {
+    Route::get('/home', 'HomeController@index')->name('home');
+});
+Route::group([
+    'middleware' => ['auth','isAdmin'],
+], function() {
+    Route::resource('seguridad','UsuarioController');
+});
 Route::resource('cliente','ClienteController');
 Route::resource('orden','OrdenController');
 Route::resource('pendiente','PendienteController');
-Route::resource('seguridad','UsuarioController');
-
+Route::resource('prueba','PruebaController');
 Auth::routes();

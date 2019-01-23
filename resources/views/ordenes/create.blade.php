@@ -73,11 +73,13 @@
                         <div class="row">
                               <div class="form-group" >
                                     <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
-                                          <label><input type="radio" name="flag_tipo" class="flat-red" required value=0>Confección</label>
+                                          <label><input type="radio" name="flag_tipo" required value=0 data-toggle="collapse" data-target="#fecha_p:not(.in)">Confección</label>
                                     </div>
                                     <div class="col-lg-3 col-sm-3 col-md-6 col-xs-6" style="margin-top: 5px">
-                                          <label><input type="radio" name="flag_tipo" class="flat-red" required value=1>Arreglo</label>
+                                          <label><input type="radio" name="flag_tipo"required value=1 data-toggle="collapse" data-target="#fecha_p.in">Arreglo</label>
                                     </div>
+
+
                               </div>
                         </div>
                         <div class="row" style="margin-top: 10px">
@@ -107,14 +109,28 @@
                               </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
+                              <div class="panel-collapse collapse" id="fecha_p">
+                                    <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
+                                          <div class="form-group">
+                                                <label for="fecha_prueba">Fecha de prueba</label>
+                                                <div class="input-group date">
+                                                      <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                      </div>
+                                                      <input type="text" class="form-control pull-right" id="datepicker1" name="fecha_prueba">
+                                                </div>
+                                                <!-- /.input group -->
+                                          </div>
+                                    </div>
+                              </div>
+                              <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
                                     <div class="form-group">
                                           <label for="fecha_entrega">Fecha de entrega</label>
                                           <div class="input-group date">
                                                 <div class="input-group-addon">
                                                       <i class="fa fa-calendar"></i>
                                                 </div>
-                                                <input type="text" class="form-control pull-right" id="datepicker" name="fecha_entrega" required value="{{old('fecha_entrega')}}">
+                                                <input type="text" class="form-control pull-right" id="datepicker2" name="fecha_entrega" required value="{{old('fecha_entrega')}}">
                                           </div>
                                           <!-- /.input group -->
                                     </div>
@@ -161,14 +177,23 @@
             }
             return true;
       }
+      // $('input[name="flag_tipo"]').on('ifChecked', function (event) {
+      //       if ($(this).val() === 1) {
+      //             document.getElementsByName('fecha_prueba')[0].value="";
+      //       }
+      // });
 </script>
 <script>
       var date = new Date();
       date.setDate(date.getDate());
       $(function () {
-            $('#datepicker').datepicker({
+            $('#datepicker1').datepicker({
                   autoclose: true,
                   startDate: new Date()
+            })
+            $('#datepicker2').datepicker({
+                autoclose: true,
+                startDate: new Date()
             })
         //Flat red color scheme for iCheck
             $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({

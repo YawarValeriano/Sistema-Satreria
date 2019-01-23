@@ -5,7 +5,7 @@
 			<div class="box-header with-border">
 				<div class="row">
 			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			          	<h3 class="box-title">Listado de Órdenes <a href="orden/create"><button class="btn btn-success">Nuevo</button></a></h3>
+			          	<h3 class="box-title">Listado de Órdenes <a href="{{url('orden/create')}}"><button class="btn btn-success">Nuevo</button></a></h3>
 			        </div>
 			    </div>
 			</div>
@@ -28,6 +28,7 @@
 			          				<th>Total</th>
 			          				<th>Saldo</th>
 			          				<th>Fecha Ini</th>
+									<th>Fecha Prueba</th>
 			          				<th>Fecha Ent</th>
 			          				<th>Tipo</th>
 			          				<th>Estado</th>
@@ -44,7 +45,8 @@
 			          					<td>{{$or->total}}</td>
 			          					<td>{{$or->saldo}}</td>
 			          					<td>{{$or->fecha_inicio}}</td>
-			          					<td>{{$or->fecha_entrega}}</td>
+										<td>{{$or->fecha_prueba}}</td>
+										<td>{{$or->fecha_entrega}}</td>
 			          					@if ( $or->flag_tipo === 0 )
 			          						<td>Confección</td>
 			          					@else

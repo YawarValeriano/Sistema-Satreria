@@ -83,12 +83,12 @@
 
                     <ul class="site-menu js-clone-nav d-none d-lg-block">
                       @if (Route::has('login'))
-                      @auth
-                         <li class="active"><a href="{{ url('/home') }}">Home</a></li> 
-                      @else
-                         <li><a href="{{ route('login') }}">Entrar</a></li> 
-                      @endauth
-                    @endif
+                        @auth
+                           <li class="active"><a href="{{ url('/home') }}">Inicio</a></li>
+                        @else
+                           <li><a href="{{ route('login') }}">Entrar</a></li>
+                        @endauth
+                      @endif
                       <li><a href="#Trabajos">Entrega de Trabajos</a></li>
                       <li><a href="#Aboutus">Nuestros Trabajos</a></li>
                       <li><a href="#contact">Contactanos</a></li>

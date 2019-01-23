@@ -22,7 +22,7 @@ class ClienteController extends Controller
 		{
 			$query=trim($request->get('searchText'));
 			$cliente=DB::table('cliente as a')
-				->select('a.CI','a.nombre','a.apellidos','a.telefono','a.zona')
+				->select('a.CI','a.nombre','a.apellidos','a.telefono','a.zona','a.email')
 				->where('a.nombre','LIKE','%'.$query.'%')
                 ->orwhere('a.telefono','LIKE','%'.$query.'%')
                 ->orwhere('a.CI','LIKE','%'.$query.'%')
@@ -44,6 +44,7 @@ class ClienteController extends Controller
             $cliente->apellidos=$request->get('apellidos');
             $cliente->telefono=$request->get('telefono');
             $cliente->zona=$request->get('zona');
+            $cliente->email=$request->get('email');
             $cliente->save();
             return Redirect::to('orden/create');
         } catch(QueryException $ex){ 

@@ -90,12 +90,16 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Tareas</li>
-                        <li><a href="{{url('home')}}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                        @if(Auth::user()->isAdmin())
+                            <li><a href="{{url('home')}}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                        @endif
                         <li><a href="{{url('orden')}}"><i class="fa fa-tasks"></i> <span>Ordenes</span></a></li>
                         <li><a href="{{url('pendiente')}}"><i class="fa fa-list-alt"></i> <span>Pendientes</span></a></li>
-                        <li><a href="{{url('seguridad')}}"><i class="fa fa-user-plus"></i> <span>Sastres</span></a></li>
+                        <li><a href="{{url('prueba')}}"><i class="fa fa-share"></i> <span>Pruebas</span></a></li>
+                        @if(Auth::user()->isAdmin())
+                            <li><a href="{{url('seguridad')}}"><i class="fa fa-user-plus"></i> <span>Sastres</span></a></li>
+                        @endif
                         <li><a href="{{url('cliente')}}"><i class="fa fa-users"></i> <span>Clientes</span></a></li>
-                        <li><a href="#"><i class="fa fa-info-circle"></i> <span>Ayuda</span></a></li>
                 </ul>
             </section>
             <!-- /.sidebar -->

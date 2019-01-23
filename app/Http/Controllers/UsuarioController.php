@@ -44,6 +44,7 @@ class UsuarioController extends Controller
         $usuario->birthday=$formato_fecha->format('Y-m-d');
         $usuario->email=$request->get('email');
         $usuario->password=bcrypt($request->get('password'));
+        $usuario->type=$request->get('type');
         $usuario->save();
         return Redirect::to('seguridad');
     }
@@ -56,6 +57,9 @@ class UsuarioController extends Controller
         $usuario=User::findOrFail($id);
         $usuario->email=$request->get('email');
         $usuario->password=bcrypt($request->get('password'));
+        if ($request->get('type')){
+            $usuario->type=$request->get('type');
+        }
         $usuario->update();
         return Redirect::to('seguridad');
     }

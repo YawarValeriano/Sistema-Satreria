@@ -34,24 +34,40 @@
                               <input type="text" name="nombre" required value="{{old('nombre')}}" class="form-control" placeholder="Nombre...">
                         </div>
                   </div>
+            </div>
+            <div class="row">
                   <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
                         <div class="form-group">
                               <label for="apellidos">Apellidos</label>
                               <input type="text" name="apellidos" value="{{old('apellidos')}}" class="form-control" placeholder="Apellidos...">
                         </div>
                   </div>
+            </div>
+            <div class="row">
                   <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
                         <div class="form-group">
                               <label for="telefono">Teléfono</label>
                               <input type="text" name="telefono" value="{{old('telefono')}}" class="form-control" placeholder="Teléfono...">
                         </div>
                   </div>
+            </div>
+            <div class="row">
                   <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
                         <div class="form-group">
                               <label for="zona">Dirección</label>
                               <input type="text" name="zona" required value="{{old('zona')}}" class="form-control" placeholder="Dirección...">
                         </div>
                   </div>
+            </div>
+            <div class="row">
+                  <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                        <div class="form-group">
+                              <label for="zona">Correo Electrónico</label>
+                              <input type="email" name="email" value="{{old('email')}}" class="form-control" placeholder="Correo Electrónico...">
+                        </div>
+                  </div>
+            </div>
+            <div class="row">
                   <div class="col-lg-6 col-sm-6 col-md-6 col-xs-12">
                         <div class="form-group">
                               <button class="btn btn-primary" type="submit">Guardar</button>
@@ -59,7 +75,7 @@
                               <a href="{{ URL::previous() }}" class="btn btn-warning">Cancelar</a>
                         </div>
                   </div>
-            </div>       
+            </div>
       </section>
       {!!Form::close()!!}           
 @endsection

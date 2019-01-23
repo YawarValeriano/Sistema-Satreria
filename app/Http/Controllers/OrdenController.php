@@ -33,12 +33,12 @@ class OrdenController extends Controller
 			$query=trim($request->get('searchText'));
 			$ordenes=DB::table('orden_trabajo as i')
 				->join('cliente as p','i.cliente_ci','=','p.CI')
-				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.precioUnitario as total'),DB::raw('(i.precioUnitario - i.cuenta) as saldo'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%b-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%b-%Y") as fecha_entrega'),'i.flag_tipo','i.flag_estado','i.detalle')
+				->select('i.id_orden_trabajo',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad','i.precioUnitario',DB::raw('i.precioUnitario as total'),DB::raw('(i.precioUnitario - i.cuenta) as saldo'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%b-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%b-%Y") as fecha_entrega'),DB::raw('DATE_FORMAT(i.fecha_prueba, "%d-%b-%Y") as fecha_prueba'),'i.flag_tipo','i.flag_estado','i.detalle')
 				->where('p.nombre','LIKE','%'.$query.'%')
 				->orwhere('p.apellidos','LIKE','%'.$query.'%')
 				->orwhere('p.CI','LIKE','%'.$query.'%')
 				->orderBy('i.id_orden_trabajo','DESC')
-				->groupBy('i.id_orden_trabajo','p.nombre','p.apellidos','i.cantidad','i.precioUnitario','i.cuenta','i.fecha_inicio','i.fecha_entrega','i.flag_tipo','i.flag_estado','i.detalle')
+				->groupBy('i.id_orden_trabajo','p.nombre','p.apellidos','i.cantidad','i.precioUnitario','i.cuenta','i.fecha_inicio','i.fecha_entrega','i.fecha_prueba','i.flag_tipo','i.flag_estado','i.detalle')
 				->paginate(7);
 			return view('ordenes.index',["ordenes"=>$ordenes,"searchText"=>$query]);
 		}
@@ -56,15 +56,19 @@ class OrdenController extends Controller
 		$aux=count(DB::table('orden_trabajo')->select('sastre_id')->where(DB::raw('MONTH(fecha_inicio)'),'LIKE',$hoy->month)->get());
 		$num=self::nro_orden($aux+1);
 		$orden=new Orden;
-		$orden->id_orden_trabajo=$hoy->year."-".$hoy->month."-".$num;
+		$orden->id_orden_trabajo=$hoy->day."-".$hoy->month."-".$hoy->year."-".$num;
 		$orden->sastre_id=Auth::id();
 		$orden->cliente_ci=$request->get('CI');
 		$orden->cantidad=$request->get('cantidad');
 		$orden->precioUnitario=$request->get('precioUnitario');
 		$orden->cuenta=$request->get('cuenta');
 		$orden->fecha_inicio= $hoy;
-		$formato_fecha=new Carbon($request->get('fecha_entrega'));
-		$orden->fecha_entrega=$formato_fecha->format('Y-m-d');
+		$formato_fecha_entrega=new Carbon($request->get('fecha_entrega'));
+		$orden->fecha_entrega=$formato_fecha_entrega->format('Y-m-d');
+		if ($request->get('fecha_prueba')){
+            $formato_fecha_prueba=new Carbon($request->get('fecha_prueba'));
+            $orden->fecha_prueba=$formato_fecha_prueba->format('Y-m-d');
+        }
 		$orden->flag_tipo=$request->get('flag_tipo');
 		$orden->flag_estado=0;
 		$orden->detalle=$request->get('detalle');
@@ -80,23 +84,7 @@ class OrdenController extends Controller
         $orden->update();
         return Redirect::to('orden');
 	}
-	// public function fetch(Request $request)
- //    {
- //     	if($request->get('query'))
- //     	{
-	//       	$query = $request->get('query');
-	//       	$data = DB::table('cliente')
-	//         		->where('CI', 'LIKE', "%{$query}%")
-	//         		->get();
- //      		$output = '<ul class="dropdown-menu" style="display:block; position:relative">';
-	//     	foreach($data as $row)
-	//       	{
-	//        		$output .= '<li><a href="#">'.$row->CI.'</a></li>';
-	//       	}
- //      		$output .= '</ul>';
- //      		echo $output;
- //     	}
- //    }
+
    	public function show($id){
    		DB::statement("SET lc_time_names = 'es_ES'");
 		$orden=DB::table('orden_trabajo as i')
@@ -104,6 +92,7 @@ class OrdenController extends Controller
 				->select('i.id_orden_trabajo','p.CI',DB::raw('CONCAT(p.nombre," ",p.apellidos) as cliente'),'i.cantidad',DB::raw('i.precioUnitario as total'),DB::raw('(i.precioUnitario - i.cuenta) as saldo'),'i.cuenta',DB::raw('DATE_FORMAT(i.fecha_inicio, "%d-%b-%Y") as fecha_inicio'),DB::raw('DATE_FORMAT(i.fecha_entrega, "%d-%b-%Y") as fecha_entrega'),'i.detalle')
 				->where('i.id_orden_trabajo','LIKE',$id)->first();
 		$pdf = \PDF::loadView('ordenes.vista',array('orden'=>$orden));
+//		var_dump($pdf);
 		$nombre='OT_'.$id.'.pdf';
     	return $pdf->stream($nombre);
 	 }
